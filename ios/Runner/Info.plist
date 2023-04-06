@@ -61,5 +61,7 @@
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Your Photo Library is required for this app</string>
 
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
