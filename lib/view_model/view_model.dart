@@ -20,6 +20,7 @@ class ViewModel extends ChangeNotifier {
   final soundManager = SoundManager();
 
   File? get imageFile => filePickManager.imageFile;
+
   File? get soundFile => filePickManager.soundFile;
   List<Post> posts = [];
 
@@ -31,9 +32,14 @@ class ViewModel extends ChangeNotifier {
   Future<void> getAllPosts() async {
     posts = await db.allPosts;
 
-    if (Platform.isIOS && posts.isNotEmpty) {
+    //DBにはファイル名で保存しているのでパスを取得
+    if (posts.isNotEmpty) {
       posts = filePickManager.convertPaths(posts);
     }
+
+    // if (Platform.isIOS && posts.isNotEmpty) {
+    //   posts = filePickManager.convertPaths(posts);
+    // }
     notifyListeners();
   }
 
@@ -57,29 +63,38 @@ class ViewModel extends ChangeNotifier {
 
     final id = Uuid().v1();
 
-    //iOSの場合は、一旦ファイルをアプリ内（ローカルに保存する必要あり）
+    //一旦ファイルをアプリ内（ローカルに保存する必要あり）
     //https://github.com/ryanheise/just_audio/issues/411#issuecomment-851605582
-    if (Platform.isIOS) {
-      await filePickManager.writeFilesToInternalStorage();
-    }
+    await filePickManager.writeFilesToInternalStorage();
+    // if (Platform.isIOS) {
+    //   await filePickManager.writeFilesToInternalStorage();
+    // }
 
-    //DBに保存
+    //DBに保存（iOSはパスを保存すると再起動時にロードエラーになってしますのでファイル名だけ保存
     await db.createMessage(
       Post(
         id: id,
-        imagePath: (imageFile != null)
-            ? Platform.isAndroid
-                ? imageFile!.path
-                : path.basename(imageFile!.path)
-            : "",
-        soundPath: (soundFile != null)
-            ? (Platform.isAndroid)
-                ? soundFile!.path
-                : path.basename(soundFile!.path)
-            : "",
+        imagePath: (imageFile != null) ? path.basename(imageFile!.path) : "",
+        soundPath: (soundFile != null) ? path.basename(soundFile!.path) : "",
         message: message,
       ),
     );
+    // await db.createMessage(
+    //   Post(
+    //     id: id,
+    //     imagePath: (imageFile != null)
+    //         ? Platform.isAndroid
+    //             ? imageFile!.path
+    //             : path.basename(imageFile!.path)
+    //         : "",
+    //     soundPath: (soundFile != null)
+    //         ? (Platform.isAndroid)
+    //             ? soundFile!.path
+    //             : path.basename(soundFile!.path)
+    //         : "",
+    //     message: message,
+    //   ),
+    // );
 
     filePickManager.clear();
     getAllPosts();
