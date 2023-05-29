@@ -70,7 +70,8 @@ class ViewModel extends ChangeNotifier {
     //   await filePickManager.writeFilesToInternalStorage();
     // }
 
-    //DBに保存（iOSはパスを保存すると再起動時にロードエラーになってしますのでファイル名だけ保存
+    //TODO DBに保存（パスを保存すると再起動時にロードエラーになるのでファイル名だけ保存
+    //  （Androidではパスを保存してもエラーにならないがiOSに併せて処理を統一）
     await db.createMessage(
       Post(
         id: id,

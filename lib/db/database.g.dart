@@ -2,34 +2,105 @@
 
 part of 'database.dart';
 
-// **************************************************************************
-// MoorGenerator
-// **************************************************************************
+// ignore_for_file: type=lint
+class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PostsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _messageMeta =
+      const VerificationMeta('message');
+  @override
+  late final GeneratedColumn<String> message = GeneratedColumn<String>(
+      'message', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _imagePathMeta =
+      const VerificationMeta('imagePath');
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+      'image_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _soundPathMeta =
+      const VerificationMeta('soundPath');
+  @override
+  late final GeneratedColumn<String> soundPath = GeneratedColumn<String>(
+      'sound_path', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, message, imagePath, soundPath];
+  @override
+  String get aliasedName => _alias ?? 'posts';
+  @override
+  String get actualTableName => 'posts';
+  @override
+  VerificationContext validateIntegrity(Insertable<Post> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('message')) {
+      context.handle(_messageMeta,
+          message.isAcceptableOrUnknown(data['message']!, _messageMeta));
+    } else if (isInserting) {
+      context.missing(_messageMeta);
+    }
+    if (data.containsKey('image_path')) {
+      context.handle(_imagePathMeta,
+          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+    } else if (isInserting) {
+      context.missing(_imagePathMeta);
+    }
+    if (data.containsKey('sound_path')) {
+      context.handle(_soundPathMeta,
+          soundPath.isAcceptableOrUnknown(data['sound_path']!, _soundPathMeta));
+    } else if (isInserting) {
+      context.missing(_soundPathMeta);
+    }
+    return context;
+  }
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  Post map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Post(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      message: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}message'])!,
+      imagePath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_path'])!,
+      soundPath: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}sound_path'])!,
+    );
+  }
+
+  @override
+  $PostsTable createAlias(String alias) {
+    return $PostsTable(attachedDatabase, alias);
+  }
+}
+
 class Post extends DataClass implements Insertable<Post> {
   final String id;
   final String message;
   final String imagePath;
   final String soundPath;
-  Post(
+  const Post(
       {required this.id,
       required this.message,
       required this.imagePath,
       required this.soundPath});
-  factory Post.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return Post(
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      message: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}message'])!,
-      imagePath: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}image_path'])!,
-      soundPath: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sound_path'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -109,17 +180,20 @@ class PostsCompanion extends UpdateCompanion<Post> {
   final Value<String> message;
   final Value<String> imagePath;
   final Value<String> soundPath;
+  final Value<int> rowid;
   const PostsCompanion({
     this.id = const Value.absent(),
     this.message = const Value.absent(),
     this.imagePath = const Value.absent(),
     this.soundPath = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   PostsCompanion.insert({
     required String id,
     required String message,
     required String imagePath,
     required String soundPath,
+    this.rowid = const Value.absent(),
   })  : id = Value(id),
         message = Value(message),
         imagePath = Value(imagePath),
@@ -129,12 +203,14 @@ class PostsCompanion extends UpdateCompanion<Post> {
     Expression<String>? message,
     Expression<String>? imagePath,
     Expression<String>? soundPath,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (message != null) 'message': message,
       if (imagePath != null) 'image_path': imagePath,
       if (soundPath != null) 'sound_path': soundPath,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
@@ -142,12 +218,14 @@ class PostsCompanion extends UpdateCompanion<Post> {
       {Value<String>? id,
       Value<String>? message,
       Value<String>? imagePath,
-      Value<String>? soundPath}) {
+      Value<String>? soundPath,
+      Value<int>? rowid}) {
     return PostsCompanion(
       id: id ?? this.id,
       message: message ?? this.message,
       imagePath: imagePath ?? this.imagePath,
       soundPath: soundPath ?? this.soundPath,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -166,6 +244,9 @@ class PostsCompanion extends UpdateCompanion<Post> {
     if (soundPath.present) {
       map['sound_path'] = Variable<String>(soundPath.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -175,93 +256,19 @@ class PostsCompanion extends UpdateCompanion<Post> {
           ..write('id: $id, ')
           ..write('message: $message, ')
           ..write('imagePath: $imagePath, ')
-          ..write('soundPath: $soundPath')
+          ..write('soundPath: $soundPath, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $PostsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
-      'id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _messageMeta = const VerificationMeta('message');
-  @override
-  late final GeneratedColumn<String?> message = GeneratedColumn<String?>(
-      'message', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _imagePathMeta = const VerificationMeta('imagePath');
-  @override
-  late final GeneratedColumn<String?> imagePath = GeneratedColumn<String?>(
-      'image_path', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _soundPathMeta = const VerificationMeta('soundPath');
-  @override
-  late final GeneratedColumn<String?> soundPath = GeneratedColumn<String?>(
-      'sound_path', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  @override
-  List<GeneratedColumn> get $columns => [id, message, imagePath, soundPath];
-  @override
-  String get aliasedName => _alias ?? 'posts';
-  @override
-  String get actualTableName => 'posts';
-  @override
-  VerificationContext validateIntegrity(Insertable<Post> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('message')) {
-      context.handle(_messageMeta,
-          message.isAcceptableOrUnknown(data['message']!, _messageMeta));
-    } else if (isInserting) {
-      context.missing(_messageMeta);
-    }
-    if (data.containsKey('image_path')) {
-      context.handle(_imagePathMeta,
-          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
-    } else if (isInserting) {
-      context.missing(_imagePathMeta);
-    }
-    if (data.containsKey('sound_path')) {
-      context.handle(_soundPathMeta,
-          soundPath.isAcceptableOrUnknown(data['sound_path']!, _soundPathMeta));
-    } else if (isInserting) {
-      context.missing(_soundPathMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
-  @override
-  Post map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return Post.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $PostsTable createAlias(String alias) {
-    return $PostsTable(attachedDatabase, alias);
-  }
-}
-
 abstract class _$MyDatabase extends GeneratedDatabase {
-  _$MyDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
+  _$MyDatabase(QueryExecutor e) : super(e);
   late final $PostsTable posts = $PostsTable(this);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [posts];
 }
