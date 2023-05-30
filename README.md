@@ -1,6 +1,9 @@
-# file_pick_persistence_sample
+# file_pick_drift_sample(Flutter)
 
-A new Flutter project.
+Persist image and audio files acquired from a terminal（Using [file_picker](https://pub.dev/packages/file_picker)&[Drift](https://drift.simonbinder.eu/)）
+
+- [Demo Video](https://vimeo.com/831394507/99a434f7bc)
+
 
 ## Getting Started
 
