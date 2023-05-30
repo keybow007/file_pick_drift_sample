@@ -2,8 +2,7 @@
 
 Persist image and audio files acquired from a terminal（Using [file_picker](https://pub.dev/packages/file_picker)&[Drift](https://drift.simonbinder.eu/)）
 
-- [Demo Video](https://vimeo.com/831394507/99a434f7bc)
-
+<a href="https://vimeo.com/831394507/99a434f7bc" target="_blank">- Demo Video</a>
 
 ## Getting Started
 
