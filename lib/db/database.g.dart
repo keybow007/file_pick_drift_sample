@@ -22,17 +22,17 @@ class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
   static const VerificationMeta _imagePathMeta =
       const VerificationMeta('imagePath');
   @override
-  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+  late final GeneratedColumn<String> imageFileName = GeneratedColumn<String>(
       'image_path', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _soundPathMeta =
       const VerificationMeta('soundPath');
   @override
-  late final GeneratedColumn<String> soundPath = GeneratedColumn<String>(
+  late final GeneratedColumn<String> soundFileName = GeneratedColumn<String>(
       'sound_path', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, message, imagePath, soundPath];
+  List<GeneratedColumn> get $columns => [id, message, imageFileName, soundFileName];
   @override
   String get aliasedName => _alias ?? 'posts';
   @override
@@ -55,13 +55,13 @@ class $PostsTable extends Posts with TableInfo<$PostsTable, Post> {
     }
     if (data.containsKey('image_path')) {
       context.handle(_imagePathMeta,
-          imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
+          imageFileName.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta));
     } else if (isInserting) {
       context.missing(_imagePathMeta);
     }
     if (data.containsKey('sound_path')) {
       context.handle(_soundPathMeta,
-          soundPath.isAcceptableOrUnknown(data['sound_path']!, _soundPathMeta));
+          soundFileName.isAcceptableOrUnknown(data['sound_path']!, _soundPathMeta));
     } else if (isInserting) {
       context.missing(_soundPathMeta);
     }

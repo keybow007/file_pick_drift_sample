@@ -10,8 +10,8 @@ part 'database.g.dart';
 class Posts extends Table {
   TextColumn get id => text()();
   TextColumn get message => text()();
-  TextColumn get imagePath => text()();
-  TextColumn get soundPath => text()();
+  TextColumn get imageFileName => text()();
+  TextColumn get soundFileName => text()();
 }
 
 @DriftDatabase(tables: [Posts])
