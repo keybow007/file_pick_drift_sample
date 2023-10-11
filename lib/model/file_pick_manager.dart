@@ -57,7 +57,8 @@ class FilePickManager {
     //https://stackoverflow.com/a/50439988/13944817
     final fineName = path.basename(originalFile.path);
 
-    final filePath = "$appDirectoryPath/$fineName";
+    //final filePath = "$appDirectoryPath/$fineName";
+    final filePath = path.join(appDirectoryPath!, fineName);
     final localFile = File(filePath);
 
     //https://docs.flutter.dev/cookbook/persistence/reading-writing-files#3-write-data-to-the-file
